@@ -9,7 +9,7 @@ RUN npm ci
 
 # Copy source code and build
 COPY . .
-RUN npm run build
+RUN npm run build-only
 
 # Stage 2: Production with Nginx
 FROM nginx:alpine
