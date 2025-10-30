@@ -139,24 +139,6 @@
 
           <div class="checkbox-group">
             <label class="checkbox-label">
-              <input v-model="settings.blockCommonPasswords" type="checkbox" />
-              Block common passwords
-            </label>
-            <p class="checkbox-hint">
-              Prevents use of weak passwords like "password123"
-            </p>
-          </div>
-
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input v-model="settings.blockDictionaryWords" type="checkbox" />
-              Block dictionary words
-            </label>
-            <p class="checkbox-hint">Prevents use of common dictionary words</p>
-          </div>
-
-          <div class="checkbox-group">
-            <label class="checkbox-label">
               <input v-model="settings.preventUsernameInPassword" type="checkbox" />
               Prevent username in password
             </label>
@@ -206,14 +188,6 @@
               />
               <span class="count-suffix">passwords</span>
             </div>
-          </div>
-
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input v-model="settings.forceChangeOnFirstLogin" type="checkbox" />
-              Force password change on first login
-            </label>
-            <p class="checkbox-hint">Users must change password when logging in for the first time</p>
           </div>
 
           <div class="form-group-row">
@@ -346,8 +320,6 @@ interface PasswordSettings {
   allowedSpecialChars: string
 
   // Security Rules
-  blockCommonPasswords: boolean
-  blockDictionaryWords: boolean
   preventUsernameInPassword: boolean
 
   // Password History & Rotation
@@ -355,7 +327,6 @@ interface PasswordSettings {
   passwordExpirationDays: number
   rememberPasswordHistory: boolean
   passwordHistoryCount: number
-  forceChangeOnFirstLogin: boolean
   warnBeforeExpiration: boolean
   warnDaysBeforeExpiration: number
 
@@ -383,8 +354,6 @@ interface BackendSecuritySettings {
   passwordRequiresSpecialCharacters: boolean
   passwordRequiresSpecialCharactersMinimumCount: number
   passwordAllowedSpecialCharacters: string
-  blockCommonPasswords: boolean
-  blockDictionaryWords: boolean
   preventUsernameInPassword: boolean
   passwordExpiration: boolean
   passwordExpirationDays: number
@@ -413,14 +382,11 @@ const getDefaultSettings = (): PasswordSettings => ({
   requireSpecialChars: true,
   minSpecialChars: 1,
   allowedSpecialChars: '!@#$%^&*()_+-=[]{}|;:,.<>?',
-  blockCommonPasswords: true,
-  blockDictionaryWords: false,
   preventUsernameInPassword: true,
   enablePasswordExpiration: false,
   passwordExpirationDays: 90,
   rememberPasswordHistory: false,
   passwordHistoryCount: 5,
-  forceChangeOnFirstLogin: false,
   warnBeforeExpiration: false,
   warnDaysBeforeExpiration: 7,
   maxLoginAttempts: 5,
@@ -445,12 +411,9 @@ const applyPreset = (preset: string) => {
         requireLowercase: true,
         requireNumbers: false,
         requireSpecialChars: false,
-        blockCommonPasswords: false,
-        blockDictionaryWords: false,
         preventUsernameInPassword: false,
         enablePasswordExpiration: false,
         rememberPasswordHistory: false,
-        forceChangeOnFirstLogin: false,
         warnBeforeExpiration: false,
         maxLoginAttempts: 10,
         lockoutDuration: 5,
@@ -473,14 +436,11 @@ const applyPreset = (preset: string) => {
         minNumbers: 2,
         requireSpecialChars: true,
         minSpecialChars: 2,
-        blockCommonPasswords: true,
-        blockDictionaryWords: true,
         preventUsernameInPassword: true,
         enablePasswordExpiration: true,
         passwordExpirationDays: 90,
         rememberPasswordHistory: true,
         passwordHistoryCount: 10,
-        forceChangeOnFirstLogin: true,
         warnBeforeExpiration: true,
         warnDaysBeforeExpiration: 14,
         maxLoginAttempts: 3,
@@ -508,8 +468,6 @@ const saveSettings = async () => {
       passwordRequiresSpecialCharacters: settings.requireSpecialChars,
       passwordRequiresSpecialCharactersMinimumCount: settings.minSpecialChars,
       passwordAllowedSpecialCharacters: settings.allowedSpecialChars,
-      blockCommonPasswords: settings.blockCommonPasswords,
-      blockDictionaryWords: settings.blockDictionaryWords,
       preventUsernameInPassword: settings.preventUsernameInPassword,
       passwordExpiration: settings.enablePasswordExpiration,
       passwordExpirationDays: settings.passwordExpirationDays,
@@ -568,8 +526,6 @@ const mapBackendToFrontend = (backendSettings: BackendSecuritySettings): void =>
   settings.requireSpecialChars = backendSettings.passwordRequiresSpecialCharacters
   settings.minSpecialChars = backendSettings.passwordRequiresSpecialCharactersMinimumCount
   settings.allowedSpecialChars = backendSettings.passwordAllowedSpecialCharacters
-  settings.blockCommonPasswords = backendSettings.blockCommonPasswords
-  settings.blockDictionaryWords = backendSettings.blockDictionaryWords
   settings.preventUsernameInPassword = backendSettings.preventUsernameInPassword
   settings.enablePasswordExpiration = backendSettings.passwordExpiration
   settings.passwordExpirationDays = backendSettings.passwordExpirationDays
