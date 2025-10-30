@@ -144,7 +144,7 @@
 
             <div class="confirmation-body">
               <p class="warning-text">
-                <span v-if="!hasLinkedRecordsError">Are you sure you want to delete the <strong>{{ model?.name }}</strong> model?</span>
+                <span v-if="!hasLinkedRecordsError">Are you sure you want to delete the <strong>{{ model?.name }}</strong> model and all of its records?</span>
                 <span v-else>Are you sure you want to force delete the <strong>{{ model?.name }}</strong> model and all its linked records?</span>
               </p>
               <p class="warning-subtext">
