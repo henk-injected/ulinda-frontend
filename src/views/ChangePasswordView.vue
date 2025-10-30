@@ -276,7 +276,7 @@ const handleChangePassword = async () => {
       return
     }
 
-    const response = await apiFetch('/api/private-auth/change-password', {
+    const response = await apiFetch('/private-auth/change-password', {
       method: 'POST',
       body: JSON.stringify({
         oldPassword: oldPassword.value,
