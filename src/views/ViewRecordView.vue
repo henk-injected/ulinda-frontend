@@ -616,7 +616,7 @@
                       </tr>
 
                       <tr v-for="record in linkedRecords[linkTarget.modelLinkId]" :key="record.id">
-                        <td class="record-cell">{{ record.id.substring(0, 10) }}</td>
+                        <td class="record-cell">{{ record.id.substring(0, 8) + '...' }}</td>
                         <td v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell">
                           {{ getFieldDisplayValue(record, field) }}
                         </td>
@@ -1146,7 +1146,7 @@
                       </tr>
 
                       <tr v-for="record in unlinkedRecords[linkTarget.modelLinkId]" :key="record.id">
-                        <td class="record-cell">{{ record.id.substring(0, 10) }}</td>
+                        <td class="record-cell">{{ record.id.substring(0, 8) + '...' }}</td>
                         <td v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell">
                           {{ getFieldDisplayValue(record, field) }}
                         </td>

@@ -379,7 +379,7 @@
                   
                   <!-- Data rows -->
                   <tr v-for="record in records" :key="record.id">
-                    <td>{{ record.id.substring(0, 10) }}</td>
+                    <td>{{ record.id.substring(0, 8) + '...' }}</td>
                     <td v-for="field in recordsData?.fields" :key="field.id">
                       <span v-if="field.type === 'BOOLEAN'">
                         {{ record.fieldValues[field.id] === null || record.fieldValues[field.id] === undefined ? '' : (record.fieldValues[field.id] ? 'Yes' : 'No') }}
