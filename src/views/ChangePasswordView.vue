@@ -298,8 +298,8 @@ const handleChangePassword = async () => {
     newPassword.value = ''
 
     // Clear authentication and redirect to login
-    setTimeout(() => {
-      authStore.logout()
+    setTimeout(async () => {
+      await authStore.logout()
       router.push('/')
     }, 2000)
 
