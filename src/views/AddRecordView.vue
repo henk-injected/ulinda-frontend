@@ -373,16 +373,35 @@ const saveRecord = async () => {
       method: 'POST',
       body: JSON.stringify(recordData)
     })
-    
+
     if (!response.ok) {
       if (response.status === 401) {
         authStore.logout()
         router.push('/')
         return
       }
+
+      // Handle 500 errors with showMessageToUser
+      if (response.status === 500) {
+        try {
+          const errorData = await response.json()
+          if (errorData.showMessageToUser && errorData.message) {
+            throw new Error(errorData.message)
+          }
+        } catch (parseError) {
+          // If JSON parsing failed, fall back to default error
+          if (parseError instanceof SyntaxError) {
+            console.error('Error parsing 500 response JSON:', parseError)
+          } else {
+            // This is our intended error message, re-throw it
+            throw parseError
+          }
+        }
+      }
+
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    
+
     // Navigate back to records view
     router.push({ 
       name: 'records', 
