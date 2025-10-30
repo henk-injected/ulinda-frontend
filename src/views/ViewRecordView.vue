@@ -2208,7 +2208,32 @@ const confirmUnlink = async () => {
         router.push('/')
         return
       }
-      throw new Error(`HTTP error! status: ${response.status}`)
+
+      // Handle 500 errors with showMessageToUser
+      if (response.status === 500) {
+        try {
+          const errorData = await response.json()
+          if (errorData.showMessageToUser) {
+            // Check for specific error codes and provide user-friendly messages
+            if (errorData.errorCode === 'PERMISSION_DENIED') {
+              unlinkError.value = errorData.message || 'Permission denied'
+            } else if (errorData.message) {
+              unlinkError.value = errorData.message
+            } else {
+              unlinkError.value = 'An error occurred while unlinking records.'
+            }
+            return
+          }
+        } catch (parseError) {
+          console.error('Error parsing 500 response JSON:', parseError)
+          unlinkError.value = 'Failed to unlink records. Please try again.'
+          return
+        }
+      }
+
+      // Handle other error status codes
+      unlinkError.value = `Failed to unlink records. HTTP error: ${response.status}`
+      return
     }
 
     // Close modal and refresh the linked records list
