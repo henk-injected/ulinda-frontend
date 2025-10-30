@@ -11,7 +11,6 @@ export interface ModelField {
     | 'EMAIL'
   name: string
   description: string
-  parentField: boolean
 }
 
 export interface Model {
@@ -142,7 +141,6 @@ export interface FieldDto {
   type: string
   name: string
   description: string
-  isParentField: boolean
 }
 
 export interface ModelDto {

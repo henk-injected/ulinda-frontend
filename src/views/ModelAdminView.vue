@@ -43,7 +43,6 @@
                   <th>Field Name</th>
                   <th>Type</th>
                   <th>Description</th>
-                  <th>Parent Field</th>
                   <th>Required</th>
                   <th class="actions-header">Actions</th>
                 </tr>
@@ -57,11 +56,6 @@
                     </span>
                   </td>
                   <td class="field-description">{{ field.description || '-' }}</td>
-                  <td class="field-parent">
-                    <span class="boolean-badge" :class="{ 'boolean-true': field.isParentField, 'boolean-false': !field.isParentField }">
-                      {{ field.isParentField ? 'Yes' : 'No' }}
-                    </span>
-                  </td>
                   <td class="field-required">
                     <span class="boolean-badge" :class="{ 'boolean-true': field.isRequired, 'boolean-false': !field.isRequired }">
                       {{ field.isRequired ? 'Yes' : 'No' }}
@@ -249,21 +243,6 @@
                   :disabled="addingField"
                 ></textarea>
               </div>
-              
-              <div class="form-group">
-                <div class="checkbox-group">
-                  <input
-                    id="isParentField"
-                    v-model="newField.isParentField"
-                    type="checkbox"
-                    class="form-checkbox"
-                    :disabled="addingField"
-                  />
-                  <label for="isParentField" class="checkbox-label">
-                    Is Parent Field
-                  </label>
-                </div>
-              </div>
 
               <div class="form-group">
                 <div class="checkbox-group">
@@ -415,21 +394,6 @@
                   rows="3"
                   :disabled="editingField"
                 ></textarea>
-              </div>
-
-              <div class="form-group">
-                <div class="checkbox-group">
-                  <input
-                    id="editIsParentField"
-                    v-model="editFieldData.isParentField"
-                    type="checkbox"
-                    class="form-checkbox"
-                    :disabled="editingField"
-                  />
-                  <label for="editIsParentField" class="checkbox-label">
-                    Is Parent Field
-                  </label>
-                </div>
               </div>
 
               <div class="form-group">
@@ -605,7 +569,6 @@ const newField = ref({
   name: '',
   type: '',
   description: '',
-  isParentField: false,
   isRequired: false
 })
 const showEditModel = ref(false)
@@ -622,7 +585,6 @@ const fieldToEdit = ref<FieldDto | null>(null)
 const editFieldData = ref({
   name: '',
   description: '',
-  isParentField: false,
   isRequired: false
 })
 
@@ -689,7 +651,6 @@ const addField = () => {
     name: '',
     type: '',
     description: '',
-    isParentField: false,
     isRequired: false
   }
   addFieldError.value = null
@@ -702,7 +663,6 @@ const cancelAddField = () => {
     name: '',
     type: '',
     description: '',
-    isParentField: false,
     isRequired: false
   }
   addFieldError.value = null
@@ -724,7 +684,6 @@ const createField = async () => {
       name: newField.value.name,
       type: newField.value.type,
       description: newField.value.description || undefined,
-      isParentField: newField.value.isParentField,
       isRequired: newField.value.isRequired
     }
 
@@ -748,7 +707,6 @@ const createField = async () => {
       name: '',
       type: '',
       description: '',
-      isParentField: false,
       isRequired: false
     }
     
@@ -955,7 +913,6 @@ const editField = (field: FieldDto) => {
   editFieldData.value = {
     name: field.name,
     description: field.description || '',
-    isParentField: field.isParentField,
     isRequired: field.isRequired
   }
   editFieldError.value = null
@@ -968,7 +925,6 @@ const cancelEditField = () => {
   editFieldData.value = {
     name: '',
     description: '',
-    isParentField: false,
     isRequired: false
   }
   editFieldError.value = null
@@ -987,7 +943,6 @@ const saveField = async () => {
     const updateFieldData = {
       name: editFieldData.value.name,
       description: editFieldData.value.description || undefined,
-      isParent: editFieldData.value.isParentField,
       isRequired: editFieldData.value.isRequired
     }
 
@@ -1011,7 +966,6 @@ const saveField = async () => {
     editFieldData.value = {
       name: '',
       description: '',
-      isParentField: false,
       isRequired: false
     }
 

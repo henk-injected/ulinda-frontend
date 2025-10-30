@@ -75,7 +75,6 @@
                       <span class="field-type">({{ formatFieldType(field.type) }})</span>
                       <span v-if="field.description" class="field-desc">- {{ field.description }}</span>
                       <div class="field-properties">
-                        <span v-if="field.isParentField" class="field-property">Parent Field</span>
                         <span v-if="field.isRequired" class="field-property">Required</span>
                       </div>
                     </div>
@@ -139,21 +138,6 @@
                     </div>
 
                     <div class="form-row">
-                      <div class="form-col">
-                        <div class="checkbox-group">
-                          <input
-                            id="fieldIsParent"
-                            v-model="newField.isParentField"
-                            type="checkbox"
-                            class="form-checkbox"
-                            :disabled="addingModel"
-                          />
-                          <label for="fieldIsParent" class="checkbox-label">
-                            Parent Field
-                          </label>
-                        </div>
-                      </div>
-
                       <div class="form-col">
                         <div class="checkbox-group">
                           <input
@@ -258,7 +242,6 @@ const newField = ref({
   name: '',
   type: '',
   description: '',
-  isParentField: false,
   isRequired: false
 })
 
@@ -344,8 +327,7 @@ const showAddFieldToModel = () => {
     name: '',
     type: '',
     description: '',
-    isParentField: false,
-    isRequired: false
+      isRequired: false
   }
   showAddFieldForm.value = true
 }
@@ -356,8 +338,7 @@ const cancelAddFieldToModel = () => {
     name: '',
     type: '',
     description: '',
-    isParentField: false,
-    isRequired: false
+      isRequired: false
   }
 }
 
@@ -371,7 +352,6 @@ const addFieldToModel = () => {
     name: newField.value.name,
     type: newField.value.type as any,
     description: newField.value.description,
-    isParentField: newField.value.isParentField,
     isRequired: newField.value.isRequired
   }
 
@@ -383,8 +363,7 @@ const addFieldToModel = () => {
     name: '',
     type: '',
     description: '',
-    isParentField: false,
-    isRequired: false
+      isRequired: false
   }
 }
 
