@@ -41,8 +41,18 @@
             <table class="records-table">
                 <thead>
                   <tr>
-                    <th v-for="field in recordsData?.fields" :key="field.id" 
-                        @click="handleSort(field.id)" 
+                    <th @click="handleSort('id')" class="sortable-header">
+                      <div class="header-content">
+                        <span>Record ID</span>
+                        <span class="sort-indicator">
+                          <span v-if="sortField === 'id' && sortOrder === 'asc'" class="sort-arrow">↑</span>
+                          <span v-else-if="sortField === 'id' && sortOrder === 'desc'" class="sort-arrow">↓</span>
+                          <span v-else class="sort-arrow-placeholder">↕</span>
+                        </span>
+                      </div>
+                    </th>
+                    <th v-for="field in recordsData?.fields" :key="field.id"
+                        @click="handleSort(field.id)"
                         class="sortable-header">
                       <div class="header-content">
                         <span>{{ field.name }}</span>
@@ -80,6 +90,19 @@
                   
                   <!-- Search filter row (dropdowns only) -->
                   <tr v-if="showSearch" class="search-row">
+                    <td class="search-cell">
+                      <div class="search-filter">
+                        <select
+                          :value="searchFilters['id']?.operator || 'all'"
+                          @change="updateSearchFilter('id', 'operator', $event.target.value)"
+                          class="filter-select"
+                        >
+                          <option v-for="option in textFilterOptions" :key="option.value" :value="option.value">
+                            {{ option.label }}
+                          </option>
+                        </select>
+                      </div>
+                    </td>
                     <td v-for="field in recordsData?.fields" :key="`search-${field.id}`" class="search-cell">
                       <div class="search-filter">
                         <!-- Text fields (SINGLE_LINE_TEXT, MULTI_LINE_TEXT, EMAIL) -->
@@ -179,6 +202,18 @@
                   
                   <!-- Search input row (appears below dropdowns when filters are selected) -->
                   <tr v-if="showSearch && hasActiveFilters" class="search-input-row">
+                    <td class="search-input-cell">
+                      <div class="search-input-container">
+                        <input
+                          v-if="searchFilters['id']?.operator && searchFilters['id'].operator !== 'all'"
+                          :value="searchFilters['id']?.value || ''"
+                          @input="updateSearchFilter('id', 'value', $event.target.value)"
+                          type="text"
+                          placeholder="Enter record ID"
+                          class="filter-input"
+                        />
+                      </div>
+                    </td>
                     <td v-for="field in recordsData?.fields" :key="`input-${field.id}`" class="search-input-cell">
                       <div class="search-input-container">
                         <!-- Text field inputs -->
@@ -334,7 +369,7 @@
                 <tbody>
                   <!-- Empty state row when no records -->
                   <tr v-if="records.length === 0" class="empty-state-row">
-                    <td :colspan="(recordsData?.fields?.length || 0) + 3" class="empty-state-cell">
+                    <td :colspan="(recordsData?.fields?.length || 0) + 4" class="empty-state-cell">
                       <div class="empty-state-content">
                         <span v-if="isSearchResult">No Records Found In Search</span>
                         <span v-else>No Records Found</span>
@@ -344,6 +379,7 @@
                   
                   <!-- Data rows -->
                   <tr v-for="record in records" :key="record.id">
+                    <td>{{ record.id.substring(0, 10) }}</td>
                     <td v-for="field in recordsData?.fields" :key="field.id">
                       <span v-if="field.type === 'BOOLEAN'">
                         {{ record.fieldValues[field.id] === null || record.fieldValues[field.id] === undefined ? '' : (record.fieldValues[field.id] ? 'Yes' : 'No') }}
@@ -664,7 +700,7 @@ const convertFiltersToSearchParameters = (): SearchParameter[] => {
     }
 
     // Text fields
-    if (['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT', 'EMAIL'].includes(fieldInfo.type)) {
+    if (['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT', 'EMAIL', 'ID'].includes(fieldInfo.type)) {
       switch (filter.operator) {
         case 'contains':
           searchParam.searchType = SearchType.TEXT_CONTAINS

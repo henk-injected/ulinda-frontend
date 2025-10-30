@@ -174,6 +174,24 @@
                   <table class="records-table">
                     <thead>
                       <tr>
+                        <th @click="handleLinkedSort(linkTarget.modelLinkId, 'id')" class="sortable-header">
+                          <div class="header-content">
+                            <span>Record ID</span>
+                            <span class="sort-indicator">
+                              <span
+                                v-if="linkedSortField[linkTarget.modelLinkId] === 'id' && linkedSortOrder[linkTarget.modelLinkId] === 'asc'"
+                                class="sort-arrow"
+                                >↑</span
+                              >
+                              <span
+                                v-else-if="linkedSortField[linkTarget.modelLinkId] === 'id' && linkedSortOrder[linkTarget.modelLinkId] === 'desc'"
+                                class="sort-arrow"
+                                >↓</span
+                              >
+                              <span v-else class="sort-arrow-placeholder">↕</span>
+                            </span>
+                          </div>
+                        </th>
                         <th
                           v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields"
                           :key="field.id"
@@ -238,6 +256,23 @@
 
                       <!-- Search filter row -->
                       <tr v-if="showLinkedSearch[linkTarget.modelLinkId]" class="search-row">
+                        <td class="search-cell">
+                          <div class="search-filter">
+                            <select
+                              :value="linkedSearchFilters[linkTarget.modelLinkId]?.['id']?.operator || 'all'"
+                              @change="updateLinkedSearchFilter(linkTarget.modelLinkId, 'id', 'operator', $event.target.value)"
+                              class="filter-select"
+                            >
+                              <option
+                                v-for="option in textFilterOptions"
+                                :key="option.value"
+                                :value="option.value"
+                              >
+                                {{ option.label }}
+                              </option>
+                            </select>
+                          </div>
+                        </td>
                         <td
                           v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields"
                           :key="`search-${field.id}`"
@@ -361,6 +396,18 @@
 
                       <!-- Search input row -->
                       <tr v-if="showLinkedSearch[linkTarget.modelLinkId] && hasActiveLinkedFilters(linkTarget.modelLinkId)" class="search-input-row">
+                        <td class="search-input-cell">
+                          <div class="search-input-container">
+                            <input
+                              v-if="linkedSearchFilters[linkTarget.modelLinkId]?.['id']?.operator && linkedSearchFilters[linkTarget.modelLinkId]['id'].operator !== 'all'"
+                              :value="linkedSearchFilters[linkTarget.modelLinkId]?.['id']?.value || ''"
+                              @input="updateLinkedSearchFilter(linkTarget.modelLinkId, 'id', 'value', $event.target.value)"
+                              type="text"
+                              placeholder="Enter record ID"
+                              class="filter-input"
+                            />
+                          </div>
+                        </td>
                         <td
                           v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields"
                           :key="`input-${field.id}`"
@@ -560,7 +607,7 @@
                     <tbody>
                       <!-- Empty state row when no records -->
                       <tr v-if="linkedRecords[linkTarget.modelLinkId].length === 0" class="empty-state-row">
-                        <td :colspan="(linkedRecordsData[linkTarget.modelLinkId]?.fields?.length || 0) + 3" class="empty-state-cell">
+                        <td :colspan="(linkedRecordsData[linkTarget.modelLinkId]?.fields?.length || 0) + 4" class="empty-state-cell">
                           <div class="empty-state-content">
                             <span v-if="isLinkedSearchResult[linkTarget.modelLinkId]">No Linked Records Found In Search</span>
                             <span v-else>No Linked Records Found</span>
@@ -569,6 +616,7 @@
                       </tr>
 
                       <tr v-for="record in linkedRecords[linkTarget.modelLinkId]" :key="record.id">
+                        <td class="record-cell">{{ record.id.substring(0, 10) }}</td>
                         <td v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell">
                           {{ getFieldDisplayValue(record, field) }}
                         </td>
@@ -656,6 +704,24 @@
                   <table class="records-table">
                     <thead>
                       <tr>
+                        <th @click="handleUnlinkedSort(linkTarget.modelLinkId, 'id')" class="sortable-header">
+                          <div class="header-content">
+                            <span>Record ID</span>
+                            <span class="sort-indicator">
+                              <span
+                                v-if="unlinkedSortField[linkTarget.modelLinkId] === 'id' && unlinkedSortOrder[linkTarget.modelLinkId] === 'asc'"
+                                class="sort-arrow"
+                                >↑</span
+                              >
+                              <span
+                                v-else-if="unlinkedSortField[linkTarget.modelLinkId] === 'id' && unlinkedSortOrder[linkTarget.modelLinkId] === 'desc'"
+                                class="sort-arrow"
+                                >↓</span
+                              >
+                              <span v-else class="sort-arrow-placeholder">↕</span>
+                            </span>
+                          </div>
+                        </th>
                         <th
                           v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields"
                           :key="field.id"
@@ -720,6 +786,23 @@
 
                       <!-- Search filter row -->
                       <tr v-if="showUnlinkedSearch[linkTarget.modelLinkId]" class="search-row">
+                        <td class="search-cell">
+                          <div class="search-filter">
+                            <select
+                              :value="unlinkedSearchFilters[linkTarget.modelLinkId]?.['id']?.operator || 'all'"
+                              @change="updateUnlinkedSearchFilter(linkTarget.modelLinkId, 'id', 'operator', $event.target.value)"
+                              class="filter-select"
+                            >
+                              <option
+                                v-for="option in textFilterOptions"
+                                :key="option.value"
+                                :value="option.value"
+                              >
+                                {{ option.label }}
+                              </option>
+                            </select>
+                          </div>
+                        </td>
                         <td
                           v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields"
                           :key="`search-${field.id}`"
@@ -843,6 +926,18 @@
 
                       <!-- Search input row -->
                       <tr v-if="showUnlinkedSearch[linkTarget.modelLinkId] && hasActiveUnlinkedFilters(linkTarget.modelLinkId)" class="search-input-row">
+                        <td class="search-input-cell">
+                          <div class="search-input-container">
+                            <input
+                              v-if="unlinkedSearchFilters[linkTarget.modelLinkId]?.['id']?.operator && unlinkedSearchFilters[linkTarget.modelLinkId]['id'].operator !== 'all'"
+                              :value="unlinkedSearchFilters[linkTarget.modelLinkId]?.['id']?.value || ''"
+                              @input="updateUnlinkedSearchFilter(linkTarget.modelLinkId, 'id', 'value', $event.target.value)"
+                              type="text"
+                              placeholder="Enter record ID"
+                              class="filter-input"
+                            />
+                          </div>
+                        </td>
                         <td
                           v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields"
                           :key="`input-${field.id}`"
@@ -1042,7 +1137,7 @@
                     <tbody>
                       <!-- Empty state row when no records -->
                       <tr v-if="unlinkedRecords[linkTarget.modelLinkId].length === 0" class="empty-state-row">
-                        <td :colspan="(unlinkedRecordsData[linkTarget.modelLinkId]?.fields?.length || 0) + 3" class="empty-state-cell">
+                        <td :colspan="(unlinkedRecordsData[linkTarget.modelLinkId]?.fields?.length || 0) + 4" class="empty-state-cell">
                           <div class="empty-state-content">
                             <span v-if="isUnlinkedSearchResult[linkTarget.modelLinkId]">No Unlinked Records Found In Search</span>
                             <span v-else>No Unlinked Records Found</span>
@@ -1051,6 +1146,7 @@
                       </tr>
 
                       <tr v-for="record in unlinkedRecords[linkTarget.modelLinkId]" :key="record.id">
+                        <td class="record-cell">{{ record.id.substring(0, 10) }}</td>
                         <td v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell">
                           {{ getFieldDisplayValue(record, field) }}
                         </td>
@@ -1848,7 +1944,7 @@ const convertLinkedFiltersToSearchParameters = (modelLinkId: string): SearchPara
     }
 
     // Text fields
-    if (['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT', 'EMAIL'].includes(fieldInfo.type)) {
+    if (['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT', 'EMAIL', 'ID'].includes(fieldInfo.type)) {
       switch (filter.operator) {
         case 'contains':
           searchParam.searchType = SearchType.TEXT_CONTAINS
@@ -2322,7 +2418,7 @@ const convertUnlinkedFiltersToSearchParameters = (modelLinkId: string): SearchPa
     }
 
     // Text fields
-    if (['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT', 'EMAIL'].includes(fieldInfo.type)) {
+    if (['SINGLE_LINE_TEXT', 'MULTI_LINE_TEXT', 'EMAIL', 'ID'].includes(fieldInfo.type)) {
       switch (filter.operator) {
         case 'contains':
           searchParam.searchType = SearchType.TEXT_CONTAINS
