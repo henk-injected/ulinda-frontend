@@ -617,7 +617,7 @@
 
                       <tr v-for="record in linkedRecords[linkTarget.modelLinkId]" :key="record.id">
                         <td class="record-cell">{{ record.id.substring(0, 8) + '...' }}</td>
-                        <td v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell">
+                        <td v-for="field in linkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell" :class="{ 'align-right': ['DECIMAL', 'LONG'].includes(field.type) }">
                           {{ getFieldDisplayValue(record, field) }}
                         </td>
                         <td class="record-cell">{{ formatDateTime(record.createdAt) }}</td>
@@ -1147,7 +1147,7 @@
 
                       <tr v-for="record in unlinkedRecords[linkTarget.modelLinkId]" :key="record.id">
                         <td class="record-cell">{{ record.id.substring(0, 8) + '...' }}</td>
-                        <td v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell">
+                        <td v-for="field in unlinkedRecordsData[linkTarget.modelLinkId]?.fields" :key="field.id" class="record-cell" :class="{ 'align-right': ['DECIMAL', 'LONG'].includes(field.type) }">
                           {{ getFieldDisplayValue(record, field) }}
                         </td>
                         <td class="record-cell">{{ formatDateTime(record.createdAt) }}</td>
@@ -3777,6 +3777,10 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.record-cell.align-right {
+  text-align: right;
 }
 
 .action-cell {

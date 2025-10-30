@@ -380,7 +380,7 @@
                   <!-- Data rows -->
                   <tr v-for="record in records" :key="record.id">
                     <td>{{ record.id.substring(0, 8) + '...' }}</td>
-                    <td v-for="field in recordsData?.fields" :key="field.id">
+                    <td v-for="field in recordsData?.fields" :key="field.id" :class="{ 'align-right': ['DECIMAL', 'LONG'].includes(field.type) }">
                       <span v-if="field.type === 'BOOLEAN'">
                         {{ record.fieldValues[field.id] === null || record.fieldValues[field.id] === undefined ? '' : (record.fieldValues[field.id] ? 'Yes' : 'No') }}
                       </span>
@@ -1128,6 +1128,10 @@ onMounted(async () => {
   color: #495057;
   max-width: 200px;
   word-wrap: break-word;
+}
+
+.records-table td.align-right {
+  text-align: right;
 }
 
 .records-table tr:last-child td {
