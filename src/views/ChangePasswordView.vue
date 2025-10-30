@@ -154,7 +154,7 @@ const validatePassword = (password: string): string[] => {
 
   if (settings.passwordRequiresSpecialCharacters) {
     const specialChars = settings.passwordAllowedSpecialCharacters
-    const regex = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`, 'g')
+    const regex = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\\-]/g, '\\$&')}]`, 'g')
     const specialCount = (password.match(regex) || []).length
     if (specialCount < settings.passwordRequiresSpecialCharactersMinimumCount) {
       errors.push(`Password must contain at least ${settings.passwordRequiresSpecialCharactersMinimumCount} special character(s) from: ${specialChars}`)
@@ -190,7 +190,7 @@ const passwordStrength = computed(() => {
 
   // Special character check
   const specialChars = settings.passwordAllowedSpecialCharacters
-  const regex = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`, 'g')
+  const regex = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\\-]/g, '\\$&')}]`, 'g')
   const specialCount = (password.match(regex) || []).length
   if (specialCount >= settings.passwordRequiresSpecialCharactersMinimumCount) strength += 15
 
@@ -251,7 +251,7 @@ const passwordRequirements = computed(() => {
 
   if (settings.passwordRequiresSpecialCharacters) {
     const specialChars = settings.passwordAllowedSpecialCharacters
-    const regex = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`, 'g')
+    const regex = new RegExp(`[${specialChars.replace(/[.*+?^${}()|[\]\\\-]/g, '\\$&')}]`, 'g')
     const count = (newPassword.value.match(regex) || []).length
     requirements.push({
       text: `At least ${settings.passwordRequiresSpecialCharactersMinimumCount} special character(s)`,
